@@ -1,0 +1,59 @@
+Casey Edmonds-Estes
+Genetic Algorithm Results
+
+SELECTION METHOD:
+Tournament Selection: 87.76, 87.76, 87.76, 83.67, 85.71 -- average = 86.53
+Rank Based Selection: 79.59, 73.47, 63.27, 71.43, 73.47 -- average = 72.23
+Boltzmann Selection: 83.67, 87.76, 83.67, 79.59, 89.80 -- average = 84.90
+
+Tournament selection appears superior, while rank based selection appears to be
+the worst. Tournament selection is probably the most aggressive to converge on a best
+individual, which I think is paying off here: perhaps with more aggressive temperture
+values, boltzmann selection could surpass tournament selection; then again, larger tournaments
+might allow tournament selection to reovertake boltzmann.
+
+CROSSOVER:
+0.0: 81.63, 73.47, 77.56, 87.75, 87.75 -- average = 81.63 
+0.3: 89.79, 91.84, 85.71, 87.76, 91.84 -- average = 89.39
+0.7: 91.84, 91.84, 89.80, 85.71, 87.76 -- average = 89.39
+1.0: 91.83, 89.79, 93.88, 89.80, 89.80 -- average = 91.02
+
+More crossover was better. This fits with my previous theory about aggression being a
+good thing here: bigger jumps through the solution space appear to result in quicker 
+convergence.
+
+MUTATION:
+0.0: 22, 14, 14, 24, 16 -- average = 18 
+0.001: 36, 34, 46, 32, 42 -- average = 38
+0.005: 84, 66, 74, 74, 70 -- average = 73.6
+0.01: 94, 94, 84, 88, 90 -- average = 90
+0.05: 92, 88, 90, 92, 90 -- average = 90.4
+0.1: 54, 46, 52, 50, 53 -- average = 50.8
+0.2: 30, 24, 26, 28, 22 -- average = 26
+
+Here, we finally reached the point where the jumps we took through the solution space
+were too big: by pM = 0.1, we were as likely to regress on a given generation as we were 
+to progress. It seems a pM between 0.01 and 0.05 is likely optimal for this problem.
+
+FITNESS MEASURES:
+Counting correct neighborhoods would be an option: that is, counting strings of correct characters that
+appear together as more valuable than individual correct letters. This could lead to better 
+crossover, combining the correct strings from each parent to form a child that keeps the correct
+bits while losing only incorrect strings.
+A second choice would be to take a looser definition of correctness: that is, count correct letters
+that are in the wrong place as worth something, and have mutation and crossover involve moving letters
+around the individual as well as replacing them. This would be more difficult to implement, but would
+have the benefit of tracking more partially correct individuals, hopefully helping the algorithm 
+converge more quickly.
+Finally, a third option would be some sort of nonlinear counting: ranking the difference between 49 and
+50 correct letters as more significant than the difference between 1 and 2. This would have the benefit
+of preserving progress once the solutions are quite good, while still allowing the algorithm to explore
+the solution space early.
+
+NOTES:
+As you can see, some of my probabilities are not round numbers. This is becuase I accidentally used the
+string "I think this is a reasonable medium sized string!" (note the single exclamation point) for my 
+earlier tests before realizing my mistake.
+Additionally, I suspect that the reason agression was so good for this problem is that there are no 
+local minima: that is, a solution with a higher fitness is always preferable to one with a lower 
+fitness. This will not be true for all problems.
