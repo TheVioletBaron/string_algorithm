@@ -21,7 +21,7 @@ def main(argv):
 		populate(population, chars, len(TARGET))
 
 	#train the algorithm
-	if selection == "ts":
+	if selection == "ts": #tournament selection
 		for generation in range(generations):
 			checkData(population, generation, disInterval)		
 			new_population = []
@@ -35,7 +35,7 @@ def main(argv):
 					new_population.append(mutate(chars, crossover(m, f), pM))
 			population = new_population
 
-	elif selection == "rs" :
+	elif selection == "rs" : #ranked selection
 		for generation in range(generations):
 			checkData(population, generation, disInterval)
 			population.sort(key=fitness)
@@ -51,7 +51,7 @@ def main(argv):
 					new_population.append(mutate(chars, crossover(m, f), pM))
 			population = new_population					
 
-	elif selection == "bs" :
+	elif selection == "bs" : #boltzmann selection
 		for generation in range(generations):
 			temperture = 100/(generation+1)
 			new_population = []
@@ -67,7 +67,7 @@ def main(argv):
 					new_population.append(mutate(chars, crossover(m, f), pM))
 					new_population.append(mutate(chars, crossover(m, f), pM))
 			population = new_population
-	else:
+	else: #if you didn't input a valid selection
 		argumentError()
 	
 	#final report
@@ -80,7 +80,10 @@ def main(argv):
 	print("Missed the target")
 	print("The best individual is " + best + " with fitness " + str(best_fitness * 100/ len(TARGET)))
 
-
+"""
+Checks the population to determine whether there has been a success
+Also checks whether it is time to print out the current state of the population
+"""
 def checkData(population, generation, disInterval):
 	for individual in population:
 		if fitness(individual) == len(TARGET):
@@ -95,12 +98,19 @@ def checkData(population, generation, disInterval):
 		print("We're on generation " + str(generation))
 		print("The best individual is " + best + " with fitness " + str(best_fitness * 100/ len(TARGET)))
 
+"""
+Takes a modified sum of the fitness of the population
+Helper function for boltzSelect
+"""
 def boltzSum(population, temperture):
 	boltz_sum = 0
 	for individual in population:
 		boltz_sum += math.exp(fitness(individual) / temperture)
 	return boltz_sum
 
+"""
+Checks the fitness of an individual
+"""
 def fitness(individual):
 	fitness = 0
 	for i in range(len(TARGET)):
@@ -108,7 +118,9 @@ def fitness(individual):
 			fitness += 1
 	return fitness
 
-
+"""
+Mutates an individual
+"""
 def mutate(chars, individual, pM):
 	for i in range(len(individual)):
 		if random.random() < pM:
@@ -117,6 +129,9 @@ def mutate(chars, individual, pM):
 			individual = "".join(individual)
 	return individual
 
+"""
+Performs crossover between two individuals
+"""
 def crossover(m, f):
 	individual = ""
 	for i in range(len(TARGET)):
@@ -126,18 +141,31 @@ def crossover(m, f):
 			individual += f[i]
 	return individual
 
+"""
+Randomly creates a population of some number of strings from a set of characters
+"""
 def populate(population, chars, length):
 	individual = ''.join(random.choice(chars) for i in range(length))
 	population.append(individual)
 
+"""
+To be called in case the argument format is invalid
+"""
 def argumentError():
 	print("Argument Error: please provide arguments in the specified format.")
 	sys.exit()
 
+"""
+Should never be called; primarily exists in case of the unexpected
+Will be called if a selection method does not make a selection properly
+"""
 def noSelectError():
 	print("Selection Error: It appears your selection method failed to choose an individual.")
 	sys.exit()
 
+"""
+Handles successes
+"""
 def success(individual, generation):
 	print("Success!")
 	print("Target: " + TARGET)
