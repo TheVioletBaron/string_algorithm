@@ -1,5 +1,6 @@
 Casey Edmonds-Estes
 Genetic Algorithm Results
+Graphs can be found at https://docs.google.com/spreadsheets/d/1wIMBNP5k82Mwpvupp_3LMLc0V9hOIKjRqlsA4lYrn04/edit?usp=sharing
 
 SELECTION METHOD:
 Tournament Selection: 87.76, 87.76, 87.76, 83.67, 85.71 -- average = 86.53
